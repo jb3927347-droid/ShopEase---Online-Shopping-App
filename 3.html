@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShopEase - Online Shopping App</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="3.css">
+</head>
+
+<body>
+  <header>
+    <div class="logo">
+      <i class="fa-solid fa-cart-shopping"></i>
+      <h1>ShopEase</h1>
+    </div>
+
+    <i class="fa-solid fa-bars menu-toggle"></i>
+
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Products</a>
+      <a href="#" id="cart-btn"><i class="fa-solid fa-cart-arrow-down"></i> Cart</a>
+      <a href="#">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h2>Shop Smart, Live Better</h2>
+      <p>Find your favorite gadgets, fashion, and home items all in one place!</p>
+      <button class="shop-btn">Shop Now</button>
+    </section>
+
+    <section class="products">
+      <h2>Featured Products</h2>
+      <div class="product-grid">
+
+        <div class="product-card" data-name="Running Shoes" data-price="59.99">
+          <img src="images/shoes.jpg" alt="Shoes">
+          <h3>Running Shoes</h3>
+          <p>$59.99</p>
+          <button>Add to Cart</button>
+        </div>
+
+        <div class="product-card" data-name="Smart Watch" data-price="89.99">
+          <img src="images/watch.jpg" alt="Watch">
+          <h3>Smart Watch</h3>
+          <p>$89.99</p>
+          <button>Add to Cart</button>
+        </div>
+
+        <div class="product-card" data-name="Wireless Headphones" data-price="49.99">
+          <img src="images/headphones.jpg" alt="Headphones">
+          <h3>Wireless Headphones</h3>
+          <p>$49.99</p>
+          <button>Add to Cart</button>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- 🛒 CART POPUP -->
+  <div class="cart-popup" id="cart-popup">
+    <div class="cart-content">
+      <h2>Your Cart</h2>
+      <ul id="cart-items"></ul>
+      <p class="total">Total: $<span id="cart-total">0.00</span></p>
+      <button id="checkout">Checkout</button>
+      <button id="close-cart">Close</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 ShopEase | Designed by Jamesleo</p>
+  </footer>
+
+  <script>
+    // MOBILE MENU
+    const menuToggle = document.querySelector(".menu-toggle");
+    const nav = document.querySelector("nav");
+    menuToggle.addEventListener("click", () => {
+      nav.classList.toggle("active");
+    });
+
+    // CART SYSTEM
+    const cart = [];
+    const cartBtn = document.getElementById("cart-btn");
+    const cartPopup = document.getElementById("cart-popup");
+    const closeCartBtn = document.getElementById("close-cart");
+    const cartItems = document.getElementById("cart-items");
+    const cartTotal = document.getElementById("cart-total");
+    const checkoutBtn = document.getElementById("checkout");
+
+    // Add to Cart
+    document.querySelectorAll(".product-card button").forEach(btn => {
+      btn.addEventListener("click", e => {
+        const card = e.target.closest(".product-card");
+        const name = card.dataset.name;
+        const price = parseFloat(card.dataset.price);
+
+        cart.push({ name, price });
+        updateCart();
+        alert(`${name} added to cart!`);
+      });
+    });
+
+    // Update cart
+    function updateCart() {
+      cartItems.innerHTML = "";
+      let total = 0;
+
+      cart.forEach((item, index) => {
+        total += item.price;
+        const li = document.createElement("li");
+        li.innerHTML = `
+          ${item.name} - $${item.price.toFixed(2)}
+          <button onclick="removeItem(${index})">x</button>
+        `;
+        cartItems.appendChild(li);
+      });
+
+      cartTotal.textContent = total.toFixed(2);
+    }
+
+    // Remove item
+    function removeItem(index) {
+      cart.splice(index, 1);
+      updateCart();
+    }
+
+    // Show/Hide cart
+    cartBtn.addEventListener("click", () => {
+      cartPopup.style.display = "flex";
+    });
+    closeCartBtn.addEventListener("click", () => {
+      cartPopup.style.display = "none";
+    });
+
+    // Checkout button
+    checkoutBtn.addEventListener("click", () => {
+      if (cart.length === 0) {
+        alert("Your cart is empty!");
+      } else {
+        alert("Thank you for your purchase! 🛍️");
+        cart.length = 0;
+        updateCart();
+        cartPopup.style.display = "none";
+      }
+    });
+  </script>
+</body>
+</html>
